@@ -8,7 +8,7 @@ package com.remesch.easyLua
     // Instance variables.
     //
 
-    private var _luaState:int;
+    protected var _luaState:int;
 
     //
     // Constructor.
@@ -50,45 +50,80 @@ package com.remesch.easyLua
     }
 
     //
-    // Private methods.
+    // Protected methods (subclass and override as necessary).
     //
 
-    private function resultsToAs3(bottom:int=1):* {
+    protected function resultsToAs3(bottom:int=1):* {
       var top:int = Lua.lua_gettop(_luaState);
+      var result:*;
 
+      trace("Top: " + top.toString());
+      trace("Bottom: " + bottom.toString());
+
+      // No return value.
       if(top == 0)
-        return undefined;
+        return null;
 
-      if(top == bottom)
-        return entryToAs3(top);
-
-      var result:Array = [];
-
-      for(var i:int = bottom; i <= top; i++) {
+      // Single return value.
+      if(top == bottom) {
+        result = variableToAs3(top);
+        Lua.lua_pop(_luaState, 1);
+        return result;
       }
 
+      // Multiple return values.
+      result = new Array();
+      while(top >= bottom) {
+        var r:* = variableToAs3(top);
+        result.push(r);
+        Lua.lua_pop(_luaState, 1);
+        top -= 1;
+      }
+      result.reverse();
       return result;
     }
 
-    private function entryToAs3(index:int):* {
+    protected function variableToAs3(index:int):* {
       switch(Lua.lua_type(_luaState, index)) {
         case Lua.LUA_TSTRING:
-          return Lua.lua_tolstring(_luaState, index, null);
+          return stringToAs3(index);
         case Lua.LUA_TBOOLEAN:
-          return !!Lua.lua_toboolean(_luaState, index);
+          return booleanToAs3(index);
         case Lua.LUA_TNUMBER:
-          return Lua.lua_tonumberx(_luaState, -1, 0);
+          return numberToAs3(index);
         case Lua.LUA_TNIL:
-          return null;
+          return nilToAs3(index);
         case Lua.LUA_TTABLE:
-          throw new Error('Lua code returned a table and tables are not supported yet');
+          return tableToAs3(index);
           break;
         default:
-          throw new Error('Lua code returned unsupported data type');
+          throw new Error('Your Lua code returned unsupported data type');
       }
     }
 
-    private function clearStack():void {
+    protected function clearStack():void {
+    }
+
+    protected function stringToAs3(index:int):String {
+      return Lua.lua_tolstring(_luaState, index, null);
+    }
+
+    protected function booleanToAs3(index):Boolean {
+      return !!Lua.lua_toboolean(_luaState, index);
+    }
+
+    protected function numberToAs3(index):Number {
+      return Lua.lua_tonumberx(_luaState, -1, 0);
+    }
+
+    protected function nilToAs3(index):Object {
+      return null;
+    }
+
+    protected function tableToAs3(index:int):Object {
+      var result:Object = {};
+
+      return result;
     }
   }
 }
