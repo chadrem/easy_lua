@@ -9,6 +9,7 @@ It builds on top of the excellent Lua port that ships with Adobe's open source [
 - Works with all ActionScript platforms (web, desktop, and mobile).
 - Automatically converts Lua return values to ActionScript variables for easy interoperability.
 - Supports multiple instances of the Lua interpretter so that you can sandbox separate scripts.
+- Simplifies the process of loading embedded Lua scripts in your project.
 
 ## Installation
 
