@@ -1,8 +1,3 @@
-//
-// EasyLua - Easily embed Lua code inside of AS3 (ActionScript) projects.
-// This code depends on the lua.swc provided in the Adobe CrossBridge sample code.
-//
-
 package com.remesch.easyLua
 {
   import flash.utils.ByteArray;
@@ -32,7 +27,6 @@ package com.remesch.easyLua
       Lua.lua_close(_luaState);
     }
 
-    // Evalulate the provided Lua code and return the results.
     public function eval(code:String):* {
       var error:int;
 
@@ -51,10 +45,6 @@ package com.remesch.easyLua
       return resultsToAs3();
     }
 
-    // Evaludate an embedded Lua script.
-    // For example, use the below syntax to embed a script and call evalEmbedded(helloLuaScript).
-    //   [Embed(source="hello.lua", mimeType="application/octet-stream"))]
-    //   private var helloLuaScript:Class;
     public function evalEmbedded(klass:Class):* {
       return eval((new klass as ByteArray).toString());
     }
