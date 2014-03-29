@@ -40,7 +40,7 @@ Tables will be automatically converted to either an AS3 array or object (hash) d
 
 Most non-trivial Lua programs store their code in files.
 Easy Lua provides the `evalEmbedded` method so that you can embed your Lua code files and load them at runtime.
-It is designed to be used with Flash's embedded asset feature where each asset file becomes its own class.
+It is designed to be used with ActionScript's embedded asset feature where each asset file becomes its own class.
 
 First you will need to embed your scripts just like you would embed any other asset.
 Below is an example `asset/hello.lua` that you would create in your project's root folder:
