@@ -15,7 +15,7 @@ Installation is simple.
 First, copy the files in the `src` and `lib` directories to your project.
 Second, tell the compiler to link your code to `lib/lua.swc`.
 
-## Usage
+## Basic Usage
 
 Create an instance of the `EasyLua` class:
 
@@ -35,6 +35,36 @@ This way you get to decide if you want to deal with the conversion overhead.
 Most basic Lua types (nil, numbers, strings, booleans, and tables) are supported.
 An exception will be raised if you try to return an unsupported type.
 Tables will be automatically converted to either an AS3 array or object (hash) depending on if the keys are integers or strings.
+
+## Embedding Scripts
+
+Most non-trivial Lua programs store their code in files.
+Easy Lua provides the `evalEmbedded` method so that you can embed your Lua code files and load them at runtime.
+It is designed to be used with Flash's embedded asset feature where each asset file becomes its own class.
+
+First you will need to embed your scripts just like you would embed any other asset.
+Below is an example `asset/hello.lua` that you would create in your project's root folder:
+
+    function helloWorld()
+      return "hello world"
+    end
+
+Below is an example `src/MyAssets.as` where you define all of your asset classes.
+
+    package
+    {
+      public class MyAssets
+      {
+        [Embed(source="../asset/hello.lua", mimeType="application/octet-stream"))]
+        public var helloLuaScript:Class;
+      }
+    }
+
+You then load each of your assets files using the `evalEmbedded` method in your application code:
+
+    var easyLua:EasyLua = new EasyLua();
+    easyLua.evalEmbedded(helloLuaScript);
+    var result:String = easyLua.eval("return helloWorld()");
 
 ## Contributing
 
