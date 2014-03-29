@@ -2,3 +2,5 @@
 .project
 .settings
 bin-debug
+src/easy_lua-app.xml
+src/easy_lua.as
