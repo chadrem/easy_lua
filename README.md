@@ -64,7 +64,7 @@ Below is an example `src/MyAssets.as` where you define all of your asset classes
 You then load each of your assets files using the `evalEmbedded` method in your application code:
 
     var easyLua:EasyLua = new EasyLua();
-    easyLua.evalEmbedded(helloLuaScript);
+    easyLua.evalEmbedded(MyAssets.helloLuaScript);
     var result:String = easyLua.eval("return helloWorld()");
 
 ## Contributing
