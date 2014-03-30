@@ -48,6 +48,12 @@ Tables will then always convert to `Object`:
 
     easyLua.autoConvertArrays = false;
 
+You must manually `dispose` instances of Easy Lua when you are finished with them.
+This ensures that the resources used by Lua are released.
+
+    easyLua.dispose()
+
+
 ## Embedding Scripts
 
 Most non-trivial Lua programs store their code in files.
