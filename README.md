@@ -36,7 +36,14 @@ Failure to do so will result in no value being returned.
 This way you get to decide if you want to deal with the conversion overhead.
 Most basic Lua types (nil, numbers, strings, booleans, and tables) are supported.
 An exception will be raised if you try to return an unsupported type.
-Tables will be automatically converted to either an AS3 array or object (hash) depending on if the keys are integers or strings.
+
+In Lua, tables can act as integer indexed arrays or as hashes (associative arrays).
+Easy Lua tries to automatically convert tables to the correct actionscript type (`Array` or `Object`).
+You can disable the automatic conversion using the below code.
+Tables will then always convert to `Object`:
+
+    var easyLua:EasyLua = new EasyLua();
+    easyLua.autoConvertArrays = false;
 
 ## Embedding Scripts
 
