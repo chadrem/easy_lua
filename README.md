@@ -11,6 +11,10 @@ It builds on top of the excellent Lua port that ships with Adobe's open source [
 - Supports multiple instances of the Lua interpretter so that you can sandbox separate scripts.
 - Simplifies the process of loading embedded Lua scripts in your project.
 
+#### Todo
+
+- Currently ActionScript can call Lua code (and receive a response), but Lua code can't call ActionScript directly.
+
 ## Installation
 
 Installation is simple.
