@@ -9,6 +9,7 @@ package com.remesch.easyLua
     //
 
     protected var _luaState:int;
+    protected var _autoConvertArrays:Boolean = true;
 
     //
     // Constructor.
@@ -22,6 +23,9 @@ package com.remesch.easyLua
     //
     // Public methods.
     //
+
+    public function get autoConvertArrays():Boolean { return _autoConvertArrays; }
+    public function set autoConvertArrays(val:Boolean):void { _autoConvertArrays = val; }
 
     public function dispose():void {
       Lua.lua_close(_luaState);
@@ -136,6 +140,7 @@ package com.remesch.easyLua
       var top:int;
       var key:*;
       var value:*;
+      var convertedResult:Array;
 
       Lua.lua_pushnil(_luaState);
       while(Lua.lua_next(_luaState, index) != 0) {
@@ -144,6 +149,28 @@ package com.remesch.easyLua
         value = variableToAs3(top);
         result[key] = value;
         Lua.lua_pop(_luaState, 1);
+      }
+
+      if(_autoConvertArrays) {
+        convertedResult = convertObjectToArray(result);
+        if(convertedResult)
+          return convertedResult;
+      }
+
+      return result;
+    }
+
+    protected function convertObjectToArray(object:Object):Array {
+      var result:Array = new Array();
+      var expectedKey:int = 1;
+
+      for(var key:* in object) {
+        if(key == expectedKey) {
+          result.push(object[key]);
+          expectedKey += 1;
+        }
+        else
+          return null;
       }
 
       return result;
