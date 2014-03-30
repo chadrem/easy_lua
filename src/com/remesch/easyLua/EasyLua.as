@@ -29,43 +29,44 @@ package com.remesch.easyLua
 
     public function eval(code:String):* {
       var error:int;
+      var top:int = Lua.lua_gettop(_luaState);
 
       clearStack();
 
       error = Lua.luaL_loadstring(_luaState, code);
 
       if (error)
-        throw new Error('Unable to read code (possible syntax errors)');
+        throw new Error('Unable to read code (possible syntax errors).');
 
       error = Lua.lua_pcallk(_luaState, 0, Lua.LUA_MULTRET, 0, 0, null);
 
       if (error)
         throw new Error("Failed to run code: " +  Lua.lua_tolstring(_luaState, -1, 0));
 
-      return resultsToAs3();
+      return resultsToAs3(top);
     }
 
     public function evalEmbedded(klass:Class):* {
-      return eval((new klass as ByteArray).toString());
+      var code:String = (new klass as ByteArray).toString();
+      var result:* = eval(code);
+
+      return result;
     }
 
     //
     // Protected methods (subclass and override as necessary).
     //
 
-    protected function resultsToAs3(bottom:int=1):* {
+    protected function resultsToAs3(bottom:int=0):* {
       var top:int = Lua.lua_gettop(_luaState);
       var result:*;
-
-      trace("Top: " + top.toString());
-      trace("Bottom: " + bottom.toString());
 
       // No return value.
       if(top == 0)
         return null;
 
       // Single return value.
-      if(top == bottom) {
+      if((top - bottom) == 1) {
         result = variableToAs3(top);
         Lua.lua_pop(_luaState, 1);
         return result;
@@ -73,7 +74,7 @@ package com.remesch.easyLua
 
       // Multiple return values.
       result = new Array();
-      while(top >= bottom) {
+      while(top > bottom) {
         var r:* = variableToAs3(top);
         result.push(r);
         Lua.lua_pop(_luaState, 1);
@@ -84,24 +85,34 @@ package com.remesch.easyLua
     }
 
     protected function variableToAs3(index:int):* {
+      var result:*;
+
       switch(Lua.lua_type(_luaState, index)) {
         case Lua.LUA_TSTRING:
-          return stringToAs3(index);
+          result = stringToAs3(index);
+          break;
         case Lua.LUA_TBOOLEAN:
-          return booleanToAs3(index);
+          result = booleanToAs3(index);
+          break;
         case Lua.LUA_TNUMBER:
-          return numberToAs3(index);
+          result = numberToAs3(index);
+          break;
         case Lua.LUA_TNIL:
-          return nilToAs3(index);
+          result = nilToAs3(index);
+          break;
         case Lua.LUA_TTABLE:
-          return tableToAs3(index);
+          result = tableToAs3(index);
           break;
         default:
-          throw new Error('Your Lua code returned unsupported data type');
+          throw new Error('Your Lua code returned an unsupported data type.');
       }
+
+      return result;
     }
 
     protected function clearStack():void {
+      var top:int = Lua.lua_gettop(_luaState);
+      Lua.lua_pop(_luaState, top);
     }
 
     protected function stringToAs3(index:int):String {
@@ -113,7 +124,7 @@ package com.remesch.easyLua
     }
 
     protected function numberToAs3(index):Number {
-      return Lua.lua_tonumberx(_luaState, -1, 0);
+      return Lua.lua_tonumberx(_luaState, index, 0);
     }
 
     protected function nilToAs3(index):Object {
@@ -122,6 +133,18 @@ package com.remesch.easyLua
 
     protected function tableToAs3(index:int):Object {
       var result:Object = {};
+      var top:int;
+      var key:*;
+      var value:*;
+
+      Lua.lua_pushnil(_luaState);
+      while(Lua.lua_next(_luaState, index) != 0) {
+        top = Lua.lua_gettop(_luaState);
+        key = variableToAs3(top - 1);
+        value = variableToAs3(top);
+        result[key] = value;
+        Lua.lua_pop(_luaState, 1);
+      }
 
       return result;
     }
