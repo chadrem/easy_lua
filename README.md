@@ -1,6 +1,6 @@
 # Easy Lua
 
-Easy Lua is the simplest way to add (Lua)[http://www.lua.org/] scripts to your Adobe Flash or ActionScript project.
+Easy Lua is the simplest way to add [Lua](http://www.lua.org/) scripts to your Adobe Flash or ActionScript project.
 It builds on top of the excellent Lua port that ships with Adobe's open source [CrossBridge](https://github.com/adobe-flash/crossbridge) project.
 
 #### Features
