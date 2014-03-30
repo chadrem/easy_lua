@@ -228,13 +228,10 @@ package com.remesch.easyLua
 
     protected function convertObjectToArray(object:Object):Array {
       var result:Array = new Array();
-      var expectedKey:int = 1;
 
       for(var key:* in object) {
-        if(key == expectedKey) {
-          result.push(object[key]);
-          expectedKey += 1;
-        }
+        if(key is int)
+          result[key - 1] = object[key];
         else
           return null;
       }
