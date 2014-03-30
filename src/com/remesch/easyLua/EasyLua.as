@@ -2,6 +2,8 @@ package com.remesch.easyLua
 {
   import flash.utils.ByteArray;
 
+  import sample.lua.__lua_objrefs;
+
   public class EasyLua
   {
     //
@@ -34,6 +36,7 @@ package com.remesch.easyLua
     public function eval(code:String):* {
       var error:int;
       var top:int = Lua.lua_gettop(_luaState);
+      var result:*;
 
       clearStack();
 
@@ -47,7 +50,15 @@ package com.remesch.easyLua
       if (error)
         throw new Error("Failed to run code: " +  Lua.lua_tolstring(_luaState, -1, 0));
 
-      return resultsToAs3(top);
+      result = resultsToAs3(top);
+
+      // IMPORTANT: Force the garbage collector to run after each eval().
+      // Easy Lua is designed to make working with AS3 + Lua as easy as possible.
+      // By collecting garbage after every eval(), I hope to prevent inefficient Lua
+      // scripts from hogging memory (especially on mobile devices).
+      Lua.lua_gc(_luaState, Lua.LUA_GCCOLLECT, 0);
+
+      return result;
     }
 
     public function evalEmbedded(klass:Class):* {
@@ -56,6 +67,61 @@ package com.remesch.easyLua
 
       return result;
     }
+
+    public function toLuaString(object:*):String {
+      var result:String = '';
+
+      if(object is String) {
+        result += '"';
+        result += object.replace(/\"/g, "\"");
+        result += '"';
+      }
+      else if(object == null) {
+        result = 'nil';
+      }
+      else if((object is Number) || (object is int) || (object is uint)) {
+        result = object.toString();
+      }
+      else if(object is Boolean) {
+        result = object.toString();
+      }
+      else if(object is Array) {
+        result = '{';
+        var length:int = object.length;
+        for(var i:int = 0; i < length; i++) {
+          result += toLuaString(object[i]);
+          result += ','
+        }
+        result += '}';
+      }
+      else if (object is Object) {
+        result = '{';
+        for(var key:* in object) {
+          if(!(key is String))
+            throw new Error('Unable to convert non-string Object key to Lua string.');
+          result += key;
+          result += '=';
+          result += toLuaString(object[key]);
+          result += ','
+        }
+        result += '}';
+      }
+      else
+        throw new Error('Unable to convert unsupported object type to Lua string.');
+
+      trace(result);
+
+      return result;
+    }
+
+    // Advanced: Expose an AS3 object directly to Lua as a global variable.
+    /*
+    public function exposeAsGlobal(name:String, object:*):void {
+      var udptr:int = Lua.push_flashref(_luaState)
+      sample.lua.__lua_objrefs[udptr] = object;
+      Lua.lua_setglobal(_luaState, name);
+    }
+    */
 
     //
     // Protected methods (subclass and override as necessary).
