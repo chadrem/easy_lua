@@ -42,7 +42,6 @@ Easy Lua tries to automatically convert tables to the correct actionscript type 
 The `autoConvertArrays` setter can disable the automatic conversion (and save some CPU cycles).
 Tables will then always convert to `Object`:
 
-    var easyLua:EasyLua = new EasyLua();
     easyLua.autoConvertArrays = false;
 
 ## Embedding Scripts
