@@ -39,7 +39,7 @@ An exception will be raised if you try to return an unsupported type.
 
 In Lua, tables can act as integer indexed arrays or as hashes (associative arrays).
 Easy Lua tries to automatically convert tables to the correct actionscript type (`Array` or `Object`).
-The `autoConvertArrays` can disable the automatic conversion (and save some CPU cycles):
+The `autoConvertArrays` setter can disable the automatic conversion (and save some CPU cycles).
 Tables will then always convert to `Object`:
 
     var easyLua:EasyLua = new EasyLua();
