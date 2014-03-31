@@ -7,7 +7,7 @@ It builds on top of the excellent Lua port that ships with Adobe's open source [
 
 - Hides all the low level Lua C API details in one easy to use class.  No Lua C API knowledge required.
 - Works with all ActionScript palatforms (web, desktop, and mobile).
-- Automatically converts Lua return values to ActionScript variables for easy interoperability.
+- Automatically converts basic ActionScript variables to Lua equivalents (and back again).
 - Supports multiple instances of the Lua interpretter so that you can sandbox separate scripts.
 - Simplifies the process of loading embedded Lua scripts in your project.
 
