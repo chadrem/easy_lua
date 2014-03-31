@@ -2,6 +2,7 @@ package com.remesch.easyLua
 {
   import flash.utils.ByteArray;
 
+  import sample.lua.CModule;
   import sample.lua.__lua_objrefs;
 
   public class EasyLua
@@ -23,7 +24,19 @@ package com.remesch.easyLua
     }
 
     //
-    // Public methods.
+    // Public static methods.
+    //
+
+    public static function addFile(name:String, bytes:ByteArray):void {
+      CModule.vfs.addFile(name, bytes);
+    }
+
+    public static function addAssetAsFile(name:String, klass:Class):void {
+      addFile(name, (new klass as ByteArray));
+    }
+
+    //
+    // Public instance methods.
     //
 
     public function get autoConvertArrays():Boolean { return _autoConvertArrays; }
