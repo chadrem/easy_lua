@@ -41,6 +41,12 @@ This way you get to decide if you want to deal with the conversion overhead.
 Most basic Lua types (nil, numbers, strings, booleans, and tables) are supported.
 An exception will be raised if you try to return an unsupported type.
 
+Easy Lua provides a helper method called `evalFunction` to simplify all of the above.
+Unlike `eval`, this method will automatically include a `return` along with convert any arguments to their Lua equivalents.
+
+    easyLua.eval("function helloWorldImproved(arg) return arg end");
+    var result:* = easyLua.evalFunction('helloWorld', { foo: 'bar' });
+
 In Lua, tables can act as integer indexed arrays or as hashes (associative arrays).
 Easy Lua tries to automatically convert tables to the correct actionscript type (`Array` or `Object`).
 The `autoConvertArrays` setter can disable the automatic conversion (and save some CPU cycles).
