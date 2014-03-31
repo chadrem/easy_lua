@@ -1,5 +1,6 @@
 package com.remesch.easyLua
 {
+  import flash.display.Sprite;
   import flash.utils.ByteArray;
 
   import sample.lua.CModule;
@@ -7,6 +8,13 @@ package com.remesch.easyLua
 
   public class EasyLua
   {
+    //
+    // Static variables.
+    //
+
+    private static var _initialized:Boolean = false;
+    private static var _console:Console = new Console();
+
     //
     // Instance variables.
     //
@@ -19,6 +27,10 @@ package com.remesch.easyLua
     //
 
     public function EasyLua() {
+      if(!EasyLua.initialized)
+        initialize();
+
+
       _luaState = Lua.luaL_newstate();
       Lua.luaL_openlibs(_luaState);
     }
@@ -26,6 +38,18 @@ package com.remesch.easyLua
     //
     // Public static methods.
     //
+
+    public static function get initialized():Boolean { return _initialized; };
+
+    public static function initialize():void {
+      if(EasyLua.initialized)
+        throw new Error('Easy Lua is already initialized.');
+
+      CModule.vfs.console = EasyLua._console;
+      CModule.startAsync(EasyLua._console);
+
+      EasyLua._initialized = true;
+    }
 
     public static function addFile(name:String, bytes:ByteArray):void {
       CModule.vfs.addFile(name, bytes);
