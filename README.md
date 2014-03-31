@@ -91,8 +91,8 @@ Below is an example `src/MyAssets.as` where you define all of your asset classes
 CrossBridge provides a VFS that lets you register files with Flash.
 This is the recommended way to load files since it uses the standard Lua `require` syntax.
 
-    var easyLua:EasyLua = new EasyLua();
     EasyLua.addAssetAsFile('hello.lua', MyAssets.helloLuaScript);
+    var easyLua:EasyLua = new EasyLua();
     easyLua.eval("require 'hello'");
     var result:String = easyLua.eval("return helloWorld()");
 
