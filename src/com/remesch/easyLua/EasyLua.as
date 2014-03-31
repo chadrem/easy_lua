@@ -109,7 +109,22 @@ package com.remesch.easyLua
       else
         throw new Error('Unable to convert unsupported object type to Lua string.');
 
-      trace(result);
+      return result;
+    }
+
+    public function evalFunction(name:String, ... args):* {
+      var result:*;
+      var argsLen:int = args.length;
+      var evalString:String = 'return ' + name + '(';
+
+      for (var i:int = 0; i < argsLen; i++) {
+        evalString += toLuaString(args[i]);
+        if(i + 1 < argsLen)
+          evalString += ',';
+      }
+      evalString += ')';
+
+      result = eval(evalString);
 
       return result;
     }
