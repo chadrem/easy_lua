@@ -51,7 +51,7 @@ Easy Lua provides a helper method called `evalFunction` to simplify all of the a
 Unlike `eval`, this method will automatically include a `return` and convert any arguments to their Lua equivalents.
 
     easyLua.eval("function helloWorldImproved(arg) return arg end");
-    var result:* = easyLua.evalFunction('helloWorld', { foo: 'bar' });
+    var result:Object = easyLua.evalFunction('helloWorld', { foo: 'bar' });
 
 #### Clean-up
 
