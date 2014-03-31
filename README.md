@@ -63,8 +63,10 @@ This ensures that the resources used by Lua are released.
 ## Embedding Scripts
 
 Most non-trivial Lua programs store their code in files.
-Easy Lua provides the `evalEmbedded` method so that you can embed your Lua code files and load them at runtime.
-It is designed to be used with ActionScript's embedded asset feature where each asset file becomes its own class.
+Easy Lua integrates with ActionScript's embedded asset feature where each asset file becomes its own class.
+You can then load these embedded assets either manually or using the CrossBridge virtual file system (VFS).
+
+#### Embedding assets
 
 First you will need to embed your scripts just like you would embed any other asset.
 Below is an example `asset/hello.lua` that you would create in your project's root folder:
@@ -84,7 +86,23 @@ Below is an example `src/MyAssets.as` where you define all of your asset classes
       }
     }
 
-You then load each of your asset classes using the `evalEmbedded` method in your application code:
+#### Virtual file system (VFS)
+
+CrossBridge provides a VFS that lets you register files with Flash.
+This is the recommended way to load files since it uses the standard Lua `require` syntax.
+
+    EasyLua.addAssetAsFile('hello.lua', MyAssets.helloLuaScript);
+    var easyLua:EasyLua = new EasyLua();
+    easyLua.eval("require 'hello'");
+    var result:String = easyLua.eval("return helloWorld()");
+
+Note that that `addAssetAsFile` is a static method.
+This is because the VFS is shared between all instances of the `EasyLua` class.
+
+#### Manual file loading
+
+In some cases you may want to load scripts manually and avoid the VFS.
+This can be accomplished with the `evalEmbedded` method:
 
     var easyLua:EasyLua = new EasyLua();
     easyLua.evalEmbedded(MyAssets.helloLuaScript);
