@@ -13,7 +13,7 @@ It builds on top of the excellent Lua port that ships with Adobe's open source [
 
 #### Todo
 
-- Currently ActionScript can call Lua code (and receive a response), but Lua code can't call ActionScript directly.
+- Currently ActionScript can call Lua code (and receive a return value), but Lua code can't call ActionScript directly.
 
 ## Installation
 
