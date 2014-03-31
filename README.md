@@ -58,7 +58,7 @@ Unlike `eval`, this method will automatically include a `return` and convert any
 You must manually `dispose` instances of Easy Lua when you are finished with them.
 This ensures that the resources used by Lua are released.
 
-    easyLua.dispose()
+    easyLua.dispose();
 
 ## Embedding Scripts
 
