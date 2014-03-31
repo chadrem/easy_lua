@@ -3,15 +3,15 @@
 Easy Lua is the simplest way to add [Lua](http://www.lua.org/) scripts to your Adobe Flash or ActionScript project.
 It builds on top of the excellent Lua port that ships with Adobe's open source [CrossBridge](https://github.com/adobe-flash/crossbridge) project.
 
-#### Features
+##### Features
 
 - Hides all the low level Lua C API details in one easy to use class.  No Lua C API knowledge required.
-- Works with all ActionScript platforms (web, desktop, and mobile).
+- Works with all ActionScript palatforms (web, desktop, and mobile).
 - Automatically converts Lua return values to ActionScript variables for easy interoperability.
 - Supports multiple instances of the Lua interpretter so that you can sandbox separate scripts.
 - Simplifies the process of loading embedded Lua scripts in your project.
 
-#### Todo
+##### Todo
 
 - Currently ActionScript can call Lua code (and receive a response), but Lua code can't call ActionScript directly.
 
@@ -23,9 +23,13 @@ Second, tell the compiler to link your code to `lib/lua.swc`.
 
 ## Basic Usage
 
+##### Initialization
+
 Create an instance of the `EasyLua` class:
 
     var easyLua:EasyLua = new EasyLua();
+
+##### Evaluating Lua code
 
 Call the `eval` method to execute some Lua code.  This code defines a `helloWorld` function that returns a string:
 
@@ -41,6 +45,8 @@ This way you get to decide if you want to deal with the conversion overhead.
 Most basic Lua types (nil, numbers, strings, booleans, and tables) are supported.
 An exception will be raised if you try to return an unsupported type.
 
+##### Evaluting Lua functions
+
 Easy Lua provides a helper method called `evalFunction` to simplify all of the above.
 Unlike `eval`, this method will automatically include a `return` along with convert any arguments to their Lua equivalents.
 
@@ -53,6 +59,8 @@ The `autoConvertArrays` setter can disable the automatic conversion (and save so
 Tables will then always convert to `Object`:
 
     easyLua.autoConvertArrays = false;
+
+##### Clean-up
 
 You must manually `dispose` instances of Easy Lua when you are finished with them.
 This ensures that the resources used by Lua are released.
@@ -84,7 +92,7 @@ Below is an example `src/MyAssets.as` where you define all of your asset classes
       }
     }
 
-You then load each of your assets files using the `evalEmbedded` method in your application code:
+You then load each of your asset classes using the `evalEmbedded` method in your application code:
 
     var easyLua:EasyLua = new EasyLua();
     easyLua.evalEmbedded(MyAssets.helloLuaScript);
