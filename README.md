@@ -48,7 +48,7 @@ An exception will be raised if you try to return an unsupported type.
 #### Evaluting Lua functions
 
 Easy Lua provides a helper method called `evalFunction` to simplify all of the above.
-Unlike `eval`, this method will automatically include a `return` along with convert any arguments to their Lua equivalents.
+Unlike `eval`, this method will automatically include a `return` and convert any arguments to their Lua equivalents.
 
     easyLua.eval("function helloWorldImproved(arg) return arg end");
     var result:* = easyLua.evalFunction('helloWorld', { foo: 'bar' });
