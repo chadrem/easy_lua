@@ -59,6 +59,50 @@ package com.remesch.easyLua
       addFile(name, (new klass as ByteArray));
     }
 
+    public static function toLuaString(object:*):String {
+      var result:String = '';
+
+      if(object is String) {
+        result += '"';
+        result += object.replace(/\"/g, "\"");
+        result += '"';
+      }
+      else if(object == null) {
+        result = 'nil';
+      }
+      else if((object is Number) || (object is int) || (object is uint)) {
+        result = object.toString();
+      }
+      else if(object is Boolean) {
+        result = object.toString();
+      }
+      else if(object is Array) {
+        result = '{';
+        var length:int = object.length;
+        for(var i:int = 0; i < length; i++) {
+          result += toLuaString(object[i]);
+          result += ','
+        }
+        result += '}';
+      }
+      else if (object is Object) {
+        result = '{';
+        for(var key:* in object) {
+          if(!(key is String))
+            throw new Error('Unable to convert non-string Object key to Lua string.');
+          result += key;
+          result += '=';
+          result += toLuaString(object[key]);
+          result += ','
+        }
+        result += '}';
+      }
+      else
+        throw new Error('Unable to convert unsupported object type to Lua string.');
+
+      return result;
+    }
+
     //
     // Public instance methods.
     //
@@ -105,57 +149,13 @@ package com.remesch.easyLua
       return result;
     }
 
-    public function toLuaString(object:*):String {
-      var result:String = '';
-
-      if(object is String) {
-        result += '"';
-        result += object.replace(/\"/g, "\"");
-        result += '"';
-      }
-      else if(object == null) {
-        result = 'nil';
-      }
-      else if((object is Number) || (object is int) || (object is uint)) {
-        result = object.toString();
-      }
-      else if(object is Boolean) {
-        result = object.toString();
-      }
-      else if(object is Array) {
-        result = '{';
-        var length:int = object.length;
-        for(var i:int = 0; i < length; i++) {
-          result += toLuaString(object[i]);
-          result += ','
-        }
-        result += '}';
-      }
-      else if (object is Object) {
-        result = '{';
-        for(var key:* in object) {
-          if(!(key is String))
-            throw new Error('Unable to convert non-string Object key to Lua string.');
-          result += key;
-          result += '=';
-          result += toLuaString(object[key]);
-          result += ','
-        }
-        result += '}';
-      }
-      else
-        throw new Error('Unable to convert unsupported object type to Lua string.');
-
-      return result;
-    }
-
     public function evalFunction(name:String, ... args):* {
       var result:*;
       var argsLen:int = args.length;
       var evalString:String = 'return ' + name + '(';
 
       for (var i:int = 0; i < argsLen; i++) {
-        evalString += toLuaString(args[i]);
+        evalString += EasyLua.toLuaString(args[i]);
         if(i + 1 < argsLen)
           evalString += ',';
       }
