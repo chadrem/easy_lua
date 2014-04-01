@@ -117,6 +117,12 @@ Tables will then always convert to `Object`:
 
     easyLua.autoConvertArrays = false;
 
+## Stdout and Lua's print()
+
+Basic support for Lua's `print` function exists.
+All output is routed to ActionScript's `trace` function.
+More advanced usage (include working with stdin) will require you to modify the `Console.as` class.
+
 ## Contributing
 
 1. Fork it
