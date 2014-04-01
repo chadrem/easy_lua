@@ -1,10 +1,8 @@
 package com.remesch.easyLua
 {
-  import flash.display.Sprite;
   import flash.utils.ByteArray;
 
   import sample.lua.CModule;
-  import sample.lua.__lua_objrefs;
 
   public class EasyLua
   {
