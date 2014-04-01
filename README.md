@@ -121,6 +121,7 @@ Tables will then always convert to `Object`:
 
 Basic support for Lua's `print` function exists.
 All output is routed to ActionScript's `trace` function.
+In practice, this is useful for basic debugging of Lua code while running inside of an ActionScript IDE or debugger (such as Adobe's Flash Builder).
 More advanced usage (include working with stdin) will require you to modify the `Console.as` class.
 
 ## Contributing
