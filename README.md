@@ -81,7 +81,7 @@ Below is an example `src/MyAssets.as` where you define all of your asset classes
     {
       public class MyAssets
       {
-        [Embed(source="../asset/hello.lua", mimeType="application/octet-stream"))]
+        [Embed(source="../asset/hello.lua", mimeType="application/octet-stream")]
         public static var helloLuaScript:Class;
       }
     }
